@@ -12,7 +12,18 @@ export interface UsersService {
     createUser(user: BaseUserDto): Promise<number>;
 }
 
-const controllerName = '/Users';
+enum Action {
+    GetAllUsers = 'GetAllUsers',
+    DeleteUser = 'DeleteUser',
+    CreateUser = 'CreateUser',
+    UpdateUser = 'UpdateUser',
+}
+
+const CONTROLLER_NAME = '/Users';
+const ID = 'Id';
+const FIRST_NAME = 'FirstName';
+const LAST_NAME = 'LaseName';
+const AGE = 'Age';
 
 @injectable()
 export default class DefaultUsersService implements UsersService {
@@ -23,37 +34,37 @@ export default class DefaultUsersService implements UsersService {
     }
 
     public getAllUsers = async(): Promise<UserDto[]> => {
-        return (await this.httpService.send<UserDto[]>(this.routeBuilderService.addController(controllerName)
-        .addAction('GetAllUsers')
+        return (await this.httpService.send<UserDto[]>(this.routeBuilderService.addController(CONTROLLER_NAME)
+        .addAction(Action.GetAllUsers.toString())
         .getRoute(),
         MethodType.GET)).data;
     }
     
     public deleteUser = async(id: number): Promise<boolean> => {
-        return (await this.httpService.send<boolean>(this.routeBuilderService.addController(controllerName)
-        .addAction('DeleteUser')
-        .addParameter('Id', id.toString())
+        return (await this.httpService.send<boolean>(this.routeBuilderService.addController(CONTROLLER_NAME)
+        .addAction(Action.DeleteUser.toString())
+        .addParameter(ID, id.toString())
         .getRoute(),
         MethodType.DELETE)).data;
     }
 
     public updateUser = async(user: UserDto): Promise<boolean> => {
-        return (await this.httpService.send<boolean>(this.routeBuilderService.addController(controllerName)
-        .addAction('UpdateUser')
-        .addParameter('Id', user.id.toString())
-        .addParameter('FirstName', user.firstName.toString())
-        .addParameter('LastName', user.lastName.toString())
-        .addParameter('Age', user.age.toString())
+        return (await this.httpService.send<boolean>(this.routeBuilderService.addController(CONTROLLER_NAME)
+        .addAction(Action.UpdateUser.toString())
+        .addParameter(ID, user.id.toString())
+        .addParameter(FIRST_NAME, user.firstName.toString())
+        .addParameter(LAST_NAME, user.lastName.toString())
+        .addParameter(AGE, user.age.toString())
         .getRoute(),
         MethodType.PUT)).data;
     }
 
     public createUser = async(user: BaseUserDto): Promise<number> => {
-        return (await this.httpService.send<number>(this.routeBuilderService.addController(controllerName)
-        .addAction('CreateUser')
-        .addParameter('FirstName', user.firstName.toString())
-        .addParameter('LastName', user.lastName.toString())
-        .addParameter('Age', user.age.toString())
+        return (await this.httpService.send<number>(this.routeBuilderService.addController(CONTROLLER_NAME)
+        .addAction(Action.CreateUser.toString())
+        .addParameter(FIRST_NAME, user.firstName.toString())
+        .addParameter(LAST_NAME, user.lastName.toString())
+        .addParameter(AGE, user.age.toString())
         .getRoute(),
         MethodType.POST)).data;
     }
