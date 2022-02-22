@@ -8,18 +8,18 @@ type Props = {
     container: Container;
 };
 
-export const IoCProvider: React.FC<Props> = (props) => {
+export const IoCProvider: React.FC<Props> = ({ container, children }) => {
     return (
-        <InversifyContext.Provider value={{ container: props.container }}>
-            {props.children}
+        <InversifyContext.Provider value={{ container: container }}>
+            {children}
         </InversifyContext.Provider>
     );
 };
 
-export function useInjection<T>(identifier: interfaces.ServiceIdentifier<T>): T {
+export const useInjection = <T, >(identifier: interfaces.ServiceIdentifier<T>) => {
     const { container } = useContext(InversifyContext);
     if (!container) {
       throw new Error();
     }
     return useMemoOne(() => container.get<T>(identifier), [container, identifier]);
-  }
+};
