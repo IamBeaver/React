@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { Container, interfaces } from 'inversify';
-import { useMemoOne } from 'use-memo-one';
+import React, { useContext } from "react";
+import { Container, interfaces } from "inversify";
+import { useMemoOne } from "use-memo-one";
 
 const InversifyContext = React.createContext<{ container: Container | null }>({ container: null });
 

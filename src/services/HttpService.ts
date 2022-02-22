@@ -1,9 +1,10 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 import { injectable } from "inversify";
 import i18n from "../locales/config";
-import { Body } from './HttpService.types'
+import { Body } from "./HttpService.types";
 
 export interface HttpService {
+    // eslint-disable-next-line
     send<T>(url: string, methodType: MethodType, headers?: ApiHeader, data?: any) : Promise<ApiResponse<T>>;
 }
 
@@ -41,7 +42,8 @@ export default class DefaultHttpService implements HttpService {
     private readonly headerValueCredentialsTypeInclude = 'include';
     private readonly headerValueCredentialsTypeOmit= 'omit';
 
-    public async send<T>(url: string, methodType: MethodType, headers?: ApiHeader, data?: any) : Promise<ApiResponse<T>> {
+    // eslint-disable-next-line
+    public send = async <T>(url: string, methodType: MethodType, headers?: ApiHeader, data?: any) : Promise<ApiResponse<T>> => {
         const headersRequest = this.getHeaders(headers);
         const bodyRequest = this.getBody(data, headers);
         const method = methodType.toString();
@@ -56,7 +58,7 @@ export default class DefaultHttpService implements HttpService {
         return this.handleResponse(response);
     }
 
-    private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
+    private handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
         if (!response.ok) {
           const message = await response.json()
           throw Error(message.error || i18n.t('app:error.unknown'))
@@ -74,6 +76,7 @@ export default class DefaultHttpService implements HttpService {
                         : this.headerValueCredentialsTypeOmit;
     };
 
+    // eslint-disable-next-line
     private getBody = (data?: any, headers?: ApiHeader) : Body => {
         if (data) {
             if (headers && headers.contentType === ContentType.Json) {
@@ -84,6 +87,7 @@ export default class DefaultHttpService implements HttpService {
         return undefined;
     };
 
+    // eslint-disable-next-line
     private createBody = (data?: any): Body => {
         const params = new URLSearchParams();
         Object.keys(data).forEach((key) => {
