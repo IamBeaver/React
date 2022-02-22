@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { injectable } from "inversify";
 import i18n from "../locales/config";
+import { Body } from './HttpService.types'
 
 export interface HttpService {
     send<T>(url: string, methodType: MethodType, headers?: ApiHeader, data?: any) : Promise<ApiResponse<T>>;
@@ -14,10 +15,10 @@ export enum ContentType {
 }
 
 export enum MethodType {
-    POST,
-    GET,
-    PUT,
-    DELETE
+    POST = 'POST',
+    GET = 'GET',
+    PUT = 'PUT',
+    DELETE = 'DELETE'
 }
 
 export interface ApiResponse<T> {
@@ -37,17 +38,13 @@ export default class DefaultHttpService implements HttpService {
     private readonly headerKeyContentType = 'Content-Type';
     private readonly headerValueContentTypeJson = 'application/json';
     private readonly headerValueContentTypeFormData = 'application/x-www-form-urlencoded';
-    private readonly headerValueMethodTypePost = 'POST';
-    private readonly headerValueMethodTypeGet = 'GET';
-    private readonly headerValueMethodTypePut = 'PUT';
-    private readonly headerValueMehtodTypeDelete = 'DELETE';
     private readonly headerValueCredentialsTypeInclude = 'include';
     private readonly headerValueCredentialsTypeOmit= 'omit';
 
     public async send<T>(url: string, methodType: MethodType, headers?: ApiHeader, data?: any) : Promise<ApiResponse<T>> {
         const headersRequest = this.getHeaders(headers);
         const bodyRequest = this.getBody(data, headers);
-        const method = this.getMethod(methodType);
+        const method = methodType.toString();
         const credentials = this.getCredentials(headers);
         const requestOptions : RequestInit = {
             method,
@@ -59,7 +56,7 @@ export default class DefaultHttpService implements HttpService {
         return this.handleResponse(response);
     }
 
-    private async handleResponse<T>(response: Response) : Promise<ApiResponse<T>> {
+    private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
         if (!response.ok) {
           const message = await response.json()
           throw Error(message.error || i18n.t('app:error.unknown'))
@@ -71,44 +68,30 @@ export default class DefaultHttpService implements HttpService {
         return result;
       }
 
-    private getCredentials = (headers?: ApiHeader) : RequestCredentials => {
+    private getCredentials = (headers?: ApiHeader): RequestCredentials => {
         return headers && !!headers.authorization 
                         ? this.headerValueCredentialsTypeInclude
                         : this.headerValueCredentialsTypeOmit;
     };
 
-    private getMethod = (method: MethodType) : string => {
-        switch (method) {
-            case MethodType.POST: {
-                return this.headerValueMethodTypePost;
-            }
-            case MethodType.GET: {
-                return this.headerValueMethodTypeGet;
-            }
-            case MethodType.DELETE: {
-                return this.headerValueMehtodTypeDelete;
-            }
-            case MethodType.PUT: {
-                return this.headerValueMethodTypePut;
-            }
-        }
-    };
-
-    private getBody = (data?: any, headers?: ApiHeader) : string | URLSearchParams | undefined => {
+    private getBody = (data?: any, headers?: ApiHeader) : Body => {
         if (data) {
             if (headers && headers.contentType === ContentType.Json) {
                 return JSON.stringify(data);
-            } else {
-                const params = new URLSearchParams();
-                Object.keys(data).forEach((key) => {
-                    params.append(key, data[key]);
-                });
-                data.map
-                return params;
             }
+            return this.createBody(data);
         }
         return undefined;
     };
+
+    private createBody = (data?: any): Body => {
+        const params = new URLSearchParams();
+        Object.keys(data).forEach((key) => {
+            params.append(key, data[key]);
+        });
+        data.map
+        return params;
+    }
 
     private getHeaders = (headers?: ApiHeader): Record<string, string> => {
         let headersRequest = {};

@@ -6,7 +6,7 @@ export const resources = {
   en: {
     app: appEn,
   }
-} as const;
+};
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'en',
