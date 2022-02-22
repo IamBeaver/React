@@ -1,5 +1,5 @@
 export default interface BaseUserDto {
     firstName: string,
     lastName: string,
-    age: string
+    age: number
 }
