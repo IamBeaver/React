@@ -34,38 +34,42 @@ export default class DefaultUsersService implements UsersService {
     }
 
     public getAllUsers = async(): Promise<UserDto[]> => {
-        return (await this.httpService.send<UserDto[]>(this.routeBuilderService.addController(CONTROLLER_NAME)
+        const route = this.routeBuilderService.addController(CONTROLLER_NAME)
         .addAction(Action.GetAllUsers.toString())
-        .getRoute(),
-        MethodType.GET)).data;
+        .getRoute();
+        this.routeBuilderService.resetRoute();
+        return (await this.httpService.send<UserDto[]>(route, MethodType.GET)).data;
     }
     
     public deleteUser = async(id: number): Promise<boolean> => {
-        return (await this.httpService.send<boolean>(this.routeBuilderService.addController(CONTROLLER_NAME)
+        const route = this.routeBuilderService.addController(CONTROLLER_NAME)
         .addAction(Action.DeleteUser.toString())
         .addParameter(ID, id.toString())
-        .getRoute(),
-        MethodType.DELETE)).data;
+        .getRoute();
+        this.routeBuilderService.resetRoute();
+        return (await this.httpService.send<boolean>(route, MethodType.DELETE)).data;
     }
 
     public updateUser = async(user: UserDto): Promise<boolean> => {
-        return (await this.httpService.send<boolean>(this.routeBuilderService.addController(CONTROLLER_NAME)
+        const route = this.routeBuilderService.addController(CONTROLLER_NAME)
         .addAction(Action.UpdateUser.toString())
         .addParameter(ID, user.id.toString())
         .addParameter(FIRST_NAME, user.firstName.toString())
         .addParameter(LAST_NAME, user.lastName.toString())
         .addParameter(AGE, user.age.toString())
-        .getRoute(),
-        MethodType.PUT)).data;
+        .getRoute();
+        this.routeBuilderService.resetRoute();
+        return (await this.httpService.send<boolean>(route, MethodType.PUT)).data;
     }
 
     public createUser = async(user: BaseUserDto): Promise<number> => {
-        return (await this.httpService.send<number>(this.routeBuilderService.addController(CONTROLLER_NAME)
+        const route = this.routeBuilderService.addController(CONTROLLER_NAME)
         .addAction(Action.CreateUser.toString())
         .addParameter(FIRST_NAME, user.firstName.toString())
         .addParameter(LAST_NAME, user.lastName.toString())
         .addParameter(AGE, user.age.toString())
-        .getRoute(),
-        MethodType.POST)).data;
+        .getRoute();
+        this.routeBuilderService.resetRoute();
+        return (await this.httpService.send<number>(route, MethodType.POST)).data;
     }
 }
