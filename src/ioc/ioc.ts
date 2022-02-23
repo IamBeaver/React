@@ -9,5 +9,4 @@ export const container = new Container();
 container.bind<HttpService>(ownTypes.httpService).to(DefaultHttpService).inSingletonScope();
 container.bind<UsersService>(ownTypes.usersService).to(DefaultUsersService).inSingletonScope();
 container.bind<RouteBuilderService>(ownTypes.routeBuilderService).to(DefaultRouteBuilderService).inTransientScope();
-
 container.bind<UsersListStore>(ownTypes.usersListStore).to(UsersListStore).inSingletonScope();

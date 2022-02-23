@@ -15,12 +15,6 @@ export default class UsersListStore {
     }
 
     public init = async(): Promise<void> => {
-        try {
-           this.users = await this.usersService.getAllUsers();
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message);
-            }
-        }
+        this.users = await this.usersService.getAllUsers();
     }
 }

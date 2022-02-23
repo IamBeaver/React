@@ -4,11 +4,11 @@ import { observer } from "mobx-react";
 import { useEffect } from "react";
 import { useInjection } from "../../ioc/ioc.react";
 import ownTypes from "../../ioc/ownTypes";
-import UserListStore from "../../stores/UsersListStore";
-import UserListItem from "../UserListItem";
+import UsersListStore from "../../stores/UsersListStore";
+import UsersListItem from "../UsersListItem"
 
 const UsersList = observer(() => {
-    const store = useInjection<UserListStore>(ownTypes.usersListStore);
+    const store = useInjection<UsersListStore>(ownTypes.usersListStore);
 
     useEffect(() => {
         const init = async() => {
@@ -20,7 +20,7 @@ const UsersList = observer(() => {
     return (
         <List>
             { store.users.map((user, key) => (
-                <UserListItem
+                <UsersListItem
                     key={key}
                     id={user.id}
                     firstName={user.firstName}

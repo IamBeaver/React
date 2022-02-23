@@ -3,14 +3,14 @@ import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemText } from "@mui
 import { observer } from "mobx-react";
 import { Person, Delete } from "@mui/icons-material";
 
-interface Props {
+interface UsersListItemProps {
     id: number;
     firstName: string;
     lastName: string;
     age: number;
 }
 
-const UserListItem = observer(({id, firstName, lastName, age}: Props) => {
+const UsersListItem = observer(({id, firstName, lastName, age}: UsersListItemProps) => {
     return (
         <ListItem
             key={id}
@@ -32,4 +32,4 @@ const UserListItem = observer(({id, firstName, lastName, age}: Props) => {
     )
 })
 
-export default UserListItem;
+export default UsersListItem;
