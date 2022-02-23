@@ -1,3 +1,5 @@
+import { injectable } from "inversify";
+
 export interface RouteBuilderService {
     addController(controller: string): RouteBuilderService;
     addAction(action: string): RouteBuilderService;
@@ -5,6 +7,7 @@ export interface RouteBuilderService {
     getRoute(): string;
 }
 
+@injectable()
 export default class DefaultRouteBuilderService implements RouteBuilderService {
     private isParameterAdded = false;
     private route = '';
@@ -33,5 +36,9 @@ export default class DefaultRouteBuilderService implements RouteBuilderService {
 
     public getRoute = (): string => {
         return this.route;
+    }
+
+    public resetRoute = (): void => {
+        this.route = '';
     }
 }
